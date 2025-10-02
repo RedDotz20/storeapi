@@ -1,14 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { LoginForm } from '../../components/LoginForm'
+import { createFileRoute } from "@tanstack/react-router";
+import { LoginForm } from "../../components/LoginForm";
 
-export const Route = createFileRoute('/auth/login')({
-  component: LoginPage,
-})
+export const Route = createFileRoute("/auth/login")({
+	component: LoginPage,
+});
 
 function LoginPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <LoginForm />
-    </div>
-  )
+	return (
+		<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+			<LoginForm />
+		</div>
+	);
 }

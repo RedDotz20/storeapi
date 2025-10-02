@@ -1,0 +1,9 @@
+node_modules
+dist
+build
+*.config.js
+src/routeTree.gen.ts
+public
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

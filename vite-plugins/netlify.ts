@@ -1,3 +1,3 @@
-import netlify from '@netlify/vite-plugin-tanstack-start'
+import netlify from "@netlify/vite-plugin-tanstack-start";
 
-export default netlify()
+export default netlify();
