@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useAuth } from "../components/AuthProvider";
-import { ProtectedRoute } from "../components/ProtectedRoute";
-import { Button } from "../components/ui/button";
+import { useAuth } from "@/components/AuthProvider";
+
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { Button } from "@/components/ui/button";
 import Products from "@/components/Products";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/dashboard/")({
 	component: DashboardPage,
 });
 

@@ -109,9 +109,3 @@ export const validateSignupForm = (
 
 	return errors;
 };
-
-// Demo credentials for FakeStore API testing
-export const DEMO_CREDENTIALS = {
-	username: "mor_2314",
-	password: "83r5^_",
-} as const;

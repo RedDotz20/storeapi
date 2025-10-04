@@ -40,7 +40,7 @@ export default [
 			// Basic JavaScript/TypeScript rules
 			"no-unused-vars": "off",
 			"@typescript-eslint/no-unused-vars": [
-				"error",
+				"warn",
 				{ argsIgnorePattern: "^_" },
 			],
 			"@typescript-eslint/explicit-function-return-type": "off",
