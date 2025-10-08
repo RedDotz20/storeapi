@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Star, ShoppingCart } from "lucide-react";
 import type { ProductType } from "@/types/products.types";
 import { Link } from "@tanstack/react-router";
+import { useCartWithToast } from "@/hooks/useCartWithToast";
 
 export function ProductCard({
 	id,
@@ -14,6 +15,19 @@ export function ProductCard({
 	image,
 	rating,
 }: ProductType) {
+	const { addToCart } = useCartWithToast();
+
+	const handleAddToCart = (e: React.MouseEvent) => {
+		e.preventDefault(); // Prevent navigation when clicking add to cart
+		e.stopPropagation();
+
+		addToCart({
+			id,
+			title,
+			price,
+			image: image || "/placeholder.svg",
+		});
+	};
 	return (
 		<Card className="group overflow-hidden transition-all hover:shadow-lg">
 			<Link
@@ -63,7 +77,7 @@ export function ProductCard({
 				</CardContent>
 			</Link>
 			<CardFooter className="p-4 pt-0">
-				<Button className="w-full" size="lg">
+				<Button className="w-full" size="lg" onClick={handleAddToCart}>
 					<ShoppingCart className="mr-2 h-4 w-4" />
 					Add to Cart
 				</Button>

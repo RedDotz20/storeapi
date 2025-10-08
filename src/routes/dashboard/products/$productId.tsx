@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, Plus, Minus } from "lucide-react";
+import { useCartWithToast } from "@/hooks/useCartWithToast";
 
 export const Route = createFileRoute("/dashboard/products/$productId")({
 	loader: async ({ params }) => {
@@ -32,6 +33,7 @@ function RouteComponent() {
 	// const { productId } = Route.useParams();
 	const product: ProductType = Route.useLoaderData();
 	const [quantity, setQuantity] = useState(1);
+	const { addToCart } = useCartWithToast();
 
 	const incrementQuantity = () => {
 		setQuantity(prev => prev + 1);
@@ -39,6 +41,18 @@ function RouteComponent() {
 
 	const decrementQuantity = () => {
 		setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+	};
+
+	const handleAddToCart = () => {
+		addToCart(
+			{
+				id: product.id,
+				title: product.title,
+				price: product.price,
+				image: product.image || "/placeholder.svg",
+			},
+			quantity
+		);
 	};
 
 	return (
@@ -108,7 +122,11 @@ function RouteComponent() {
 					</div>
 
 					<CardAction className="flex gap-2 mt-4 ">
-						<Button className="cursor-pointer" variant="outline">
+						<Button
+							className="cursor-pointer"
+							variant="outline"
+							onClick={handleAddToCart}
+						>
 							<ShoppingCart />
 							Add To Cart
 						</Button>
