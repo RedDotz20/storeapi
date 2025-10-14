@@ -10,11 +10,11 @@ import { Label } from "./ui/label";
 export const LoginForm = () => {
 	const navigate = useNavigate();
 	const { login, isLoading, error, clearError } = useAuth();
-	const usernameId = useId();
+	const emailId = useId();
 	const passwordId = useId();
 
 	const [credentials, setCredentials] = useState<LoginCredentials>({
-		username: "",
+		email: "",
 		password: "",
 	});
 
@@ -82,19 +82,19 @@ export const LoginForm = () => {
 
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
-						<Label htmlFor={usernameId}>Username</Label>
+						<Label htmlFor={emailId}>Email</Label>
 						<Input
-							id={usernameId}
-							type="text"
-							value={credentials.username}
-							onChange={handleInputChange("username")}
-							placeholder="Enter your username"
-							className={getFieldError("username") ? "border-red-500" : ""}
+							id={emailId}
+							type="email"
+							value={credentials.email}
+							onChange={handleInputChange("email")}
+							placeholder="Enter your email"
+							className={getFieldError("email") ? "border-red-500" : ""}
 						/>
 
-						{getFieldError("username") && (
+						{getFieldError("email") && (
 							<p className="text-red-500 text-sm mt-1">
-								{getFieldError("username")}
+								{getFieldError("email")}
 							</p>
 						)}
 					</div>
@@ -138,12 +138,12 @@ export const LoginForm = () => {
 
 				<div className="mt-4 p-4 bg-gray-50 rounded-md">
 					<p className="text-sm text-gray-600 mb-2">
-						Demo account for FakeStore API:
+						Demo account for Platzi API:
 					</p>
 					<p className="text-xs text-gray-500">
-						Username: mor_2314
+						Email: john@mail.com
 						<br />
-						Password: 83r5^_
+						Password: changeme
 					</p>
 				</div>
 			</div>

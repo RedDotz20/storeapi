@@ -2,7 +2,7 @@
 
 import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import netlify from "./vite-plugins/netlify.ts";
@@ -11,7 +11,7 @@ import netlify from "./vite-plugins/netlify.ts";
 export default defineConfig({
 	plugins: [
 		netlify,
-		TanStackRouterVite({ autoCodeSplitting: true }),
+		tanstackRouter({ autoCodeSplitting: true }),
 		viteReact(),
 		tailwindcss(),
 	],

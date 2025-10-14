@@ -10,7 +10,7 @@ export interface User {
 }
 
 export interface LoginCredentials {
-	username: string; // Changed from email to username for FakeStore API
+	email: string; // Platzi API uses email for login
 	password: string;
 }
 
@@ -47,28 +47,19 @@ export interface FormState {
 	isSubmitting: boolean;
 }
 
-// FakeStore API response types
-export interface FakeStoreLoginResponse {
-	token: string;
+// Platzi API response types
+export interface PlatziLoginResponse {
+	access_token: string;
+	refresh_token: string;
 }
 
-export interface FakeStoreUser {
+export interface PlatziUser {
 	id: number;
-	username: string;
 	email: string;
-	name: {
-		firstname: string;
-		lastname: string;
-	};
-	address: {
-		city: string;
-		street: string;
-		number: number;
-		zipcode: string;
-		geolocation: {
-			lat: string;
-			long: string;
-		};
-	};
-	phone: string;
+	password: string;
+	name: string;
+	role: "customer" | "admin";
+	avatar: string;
+	creationAt: string;
+	updatedAt: string;
 }

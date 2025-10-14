@@ -23,14 +23,10 @@ export const Route = createFileRoute("/auth/login")({
 });
 
 const formSchema = z.object({
-	username: z
+	email: z
 		.string()
-		.min(3, "Username must be at least 3 characters long")
-		.max(20, "Username must be less than 20 characters")
-		.regex(
-			/^[a-zA-Z0-9_]+$/,
-			"Username can only contain letters, numbers, and underscores"
-		),
+		.min(1, "Email is required")
+		.email("Please enter a valid email address"),
 	password: z.string().min(1, "Password is required"),
 });
 
@@ -48,7 +44,7 @@ function LoginPage() {
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		defaultValues: {
-			username: "",
+			email: "",
 			password: "",
 		},
 		resolver: zodResolver(formSchema),
@@ -58,7 +54,7 @@ function LoginPage() {
 		try {
 			clearError();
 			await login({
-				username: data.username,
+				email: data.email,
 				password: data.password,
 			});
 			navigate({ to: "/" });
@@ -88,14 +84,14 @@ function LoginPage() {
 					>
 						<FormField
 							control={form.control}
-							name="username"
+							name="email"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Username</FormLabel>
+									<FormLabel>Email</FormLabel>
 									<FormControl>
 										<Input
-											type="text"
-											placeholder="Enter Your Username"
+											type="email"
+											placeholder="Enter Your Email"
 											className="w-full"
 											{...field}
 										/>
@@ -166,9 +162,9 @@ function LoginPage() {
 						Sign In with Demo Account
 					</p>
 					<p className="text-xs text-gray-500">
-						Username: mor_2314
+						Email: john@mail.com
 						<br />
-						Password: 83r5^_
+						Password: changeme
 					</p>
 				</div>
 			</div>

@@ -2,8 +2,6 @@ import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import Navbar from "@/components/navbar";
-
-import Header from "../components/Header";
 import { AuthProvider } from "../components/AuthProvider";
 import { CartProvider } from "../components/CartProvider";
 import { ToastProvider } from "../components/ui/toast";

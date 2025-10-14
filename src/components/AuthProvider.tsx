@@ -20,6 +20,8 @@ import {
 	getStoredUser,
 	setStoredUser,
 	clearStoredUser,
+	getUserProfile,
+	mapPlatziUserToUser,
 } from "../lib/api";
 
 // Auth action types
@@ -123,19 +125,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			// Call the API using TanStack Query mutation
 			const loginResponse = await loginMutation.mutateAsync(credentials);
 
-			// Store the token
-			setStoredToken(loginResponse.token);
+			// Store the access token
+			setStoredToken(loginResponse.access_token);
 
-			// For demo purposes, we'll create a user object
-			// In a real app, you might decode the JWT token or make another API call
-			const user: User = {
-				id: 1, // This would come from token or user API
-				username: credentials.username,
-				email: `${credentials.username}@example.com`, // Mock email
-				role: "user",
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			};
+			// Fetch user profile using the access token
+			const platziUser = await getUserProfile(loginResponse.access_token);
+			const user = mapPlatziUserToUser(platziUser);
 
 			setStoredUser(user);
 			dispatch({ type: "AUTH_SUCCESS", payload: user });

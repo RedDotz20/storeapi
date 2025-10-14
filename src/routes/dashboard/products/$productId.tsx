@@ -1,29 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-// import { ProductCard } from "@/components/ProductCard";
 import type { ProductType } from "@/types/products.types";
-
 import { Button } from "@/components/ui/button";
-
 import {
 	Card,
 	CardAction,
 	CardContent,
 	CardDescription,
-	// CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Star, ShoppingCart, Plus, Minus } from "lucide-react";
+import { ShoppingCart, Plus, Minus } from "lucide-react";
 import { useCartWithToast } from "@/hooks/useCartWithToast";
 
 export const Route = createFileRoute("/dashboard/products/$productId")({
 	loader: async ({ params }) => {
-		const BASE_URL = "https://fakestoreapi.com/products";
+		const { getProductById } = await import("@/lib/productsApi");
 		const productId = params.productId;
 
-		return fetch(`${BASE_URL}/${productId}`).then(response => response.json());
+		return getProductById(productId);
 	},
 
 	component: RouteComponent,
@@ -49,7 +44,7 @@ function RouteComponent() {
 				id: product.id,
 				title: product.title,
 				price: product.price,
-				image: product.image || "/placeholder.svg",
+				image: product.images[0] || "/placeholder.svg",
 			},
 			quantity
 		);
@@ -65,7 +60,7 @@ function RouteComponent() {
 						<div className="space-y-2 space-x-1 flex gap-2">
 							<div className="flex items-center gap-2">
 								<div className="flex items-center gap-1">
-									{Array.from({ length: 5 }).map((_, i) => (
+									{/* {Array.from({ length: 5 }).map((_, i) => (
 										<Star
 											key={i}
 											className={`h-4 w-4 ${
@@ -74,16 +69,16 @@ function RouteComponent() {
 													: "fill-gray-200 text-gray-200"
 											}`}
 										/>
-									))}
+									))} */}
 								</div>
-								<span className="text-sm text-muted-foreground">
+								{/* <span className="text-sm text-muted-foreground">
 									{product.rating.rate.toFixed(1)} ({product.rating.count})
-								</span>
+								</span> */}
 							</div>
 
-							<Badge className="h-5" variant="secondary">
+							{/* <Badge className="h-5" variant="secondary">
 								{product.category}
-							</Badge>
+							</Badge> */}
 						</div>
 
 						<span className="text-2xl font-bold text-destructive mb-2">
@@ -138,7 +133,7 @@ function RouteComponent() {
 
 				<CardContent className="flex-1">
 					<img
-						src={product.image || "/placeholder.svg"}
+						src={product.images[0] || "/placeholder.svg"}
 						alt={product.title}
 						className="object-contain p-6 transition-transform group-hover:scale-105 w-2xs"
 

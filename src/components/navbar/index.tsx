@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Logo } from "./logo";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
 import { ShoppingCart, SunIcon } from "lucide-react";
@@ -17,7 +16,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "@tanstack/react-router";
 
 const Navbar = () => {
 	const { isAuthenticated, user, logout } = useAuth();
@@ -38,21 +36,19 @@ const Navbar = () => {
 					<Link to="/dashboard">Dashboard</Link>
 					<Link to="/profile">Profile</Link>
 				</div>
-				<div className="flex items-center gap-3">
+				<div className="flex items-center justify-center gap-2">
 					{isAuthenticated && (
-						<div className="px-2">
-							<Link
-								to="/dashboard/cart"
-								className="relative inline-flex items-center"
-							>
-								<ShoppingCart className="h-4 w-4" />
-								{cart.totalItems > 0 && (
-									<span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-										{cart.totalItems}
-									</span>
-								)}
-							</Link>
-						</div>
+						<Link
+							to="/dashboard/cart"
+							className="relative inline-flex items-center justify-center p-2"
+						>
+							<ShoppingCart className="h-6 w-6" />
+							{cart.totalItems > 0 && (
+								<span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+									{cart.totalItems}
+								</span>
+							)}
+						</Link>
 					)}
 
 					{isAuthenticated ? (

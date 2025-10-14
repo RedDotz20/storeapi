@@ -1,25 +1,26 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	LoginCredentials,
-	FakeStoreLoginResponse,
-	FakeStoreUser,
+	PlatziLoginResponse,
+	PlatziUser,
 	User,
 } from "../types/auth";
+import { config } from "@/components/config";
 
 // API base URL
-const API_BASE_URL = "https://fakestoreapi.com";
+const API_BASE_URL = config.apiBaseUrl;
 
 // API functions
 export const loginUser = async (
 	credentials: LoginCredentials
-): Promise<FakeStoreLoginResponse> => {
+): Promise<PlatziLoginResponse> => {
 	const response = await fetch(`${API_BASE_URL}/auth/login`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({
-			username: credentials.username,
+			email: credentials.email,
 			password: credentials.password,
 		}),
 	});
@@ -31,8 +32,13 @@ export const loginUser = async (
 	return response.json();
 };
 
-export const getUserById = async (userId: number): Promise<FakeStoreUser> => {
-	const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+export const getUserProfile = async (token: string): Promise<PlatziUser> => {
+	const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	});
 
 	if (!response.ok) {
 		throw new Error("Failed to fetch user data");
@@ -41,13 +47,13 @@ export const getUserById = async (userId: number): Promise<FakeStoreUser> => {
 	return response.json();
 };
 
-// Helper function to convert FakeStoreUser to our User type
-export const mapFakeStoreUserToUser = (fakeStoreUser: FakeStoreUser): User => {
+// Helper function to convert PlatziUser to our User type
+export const mapPlatziUserToUser = (platziUser: PlatziUser): User => {
 	return {
-		id: fakeStoreUser.id,
-		username: fakeStoreUser.username,
-		email: fakeStoreUser.email,
-		role: "user", // FakeStore API doesn't have roles, so default to 'user'
+		id: platziUser.id,
+		username: platziUser.name,
+		email: platziUser.email,
+		role: platziUser.role === "admin" ? "admin" : "user",
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};
@@ -63,11 +69,11 @@ export const useLoginMutation = () => {
 	});
 };
 
-export const useUserQuery = (userId: number | null) => {
+export const useUserQuery = (token: string | null) => {
 	return useQuery({
-		queryKey: ["user", userId],
-		queryFn: () => getUserById(userId!),
-		enabled: !!userId,
+		queryKey: ["user", token],
+		queryFn: () => getUserProfile(token!),
+		enabled: !!token,
 		staleTime: 5 * 60 * 1000, // 5 minutes
 	});
 };
