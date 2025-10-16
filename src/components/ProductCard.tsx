@@ -34,23 +34,23 @@ export function ProductCard({
 		});
 	};
 	return (
-		<Card className="group overflow-hidden transition-all hover:shadow-lg">
+		<Card className="group overflow-hidden transition-all hover:shadow-lg flex flex-col h-full">
 			<Link
 				to={`/dashboard/products/$productId`}
 				params={{ productId: id.toString() }}
+				className="flex flex-col flex-1 relative"
 			>
 				<div className="relative aspect-square overflow-hidden bg-secondary">
 					<img
 						src={image || "/placeholder.svg"}
 						alt={title}
-						// fill
-						className="object-contain p-6 transition-transform group-hover:scale-105"
+						className="w-full h-full object-contain p-6 transition-transform group-hover:scale-105 bg-white"
 					/>
-					<Badge className="absolute top-3 left-3 bg-card text-card-foreground border">
-						{category}
-					</Badge>
 				</div>
-				<CardContent className="p-4 space-y-3">
+				<Badge className="absolute top-0 left-4 bg-card text-card-foreground border">
+					{category}
+				</Badge>
+				<CardContent className="p-4 space-y-3 flex-1 flex flex-col">
 					<div className="flex items-start justify-between gap-2">
 						<h3 className="font-semibold text-lg leading-tight line-clamp-2 text-balance">
 							{title}
@@ -59,10 +59,10 @@ export function ProductCard({
 							${price.toFixed(2)}
 						</p>
 					</div>
-					<p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+					<p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed min-h-[2.5rem]">
 						{description}
 					</p>
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 mt-auto">
 						<div className="flex items-center gap-1">
 							{Array.from({ length: 5 }).map((_, i) => (
 								<Star

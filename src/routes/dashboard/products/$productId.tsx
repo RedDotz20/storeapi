@@ -52,33 +52,14 @@ function RouteComponent() {
 
 	return (
 		<div className="min-h-screen w-full container mx-auto py-4">
-			{/* <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"></div> */}
 			<Card className="flex flex-row-reverse justify-center ">
 				<CardHeader className="flex-2 flex flex-col justify-evenly">
 					<div className="flex flex-col justify-between">
 						<CardTitle className="mb-1">{product.title}</CardTitle>
 						<div className="space-y-2 space-x-1 flex gap-2">
 							<div className="flex items-center gap-2">
-								<div className="flex items-center gap-1">
-									{/* {Array.from({ length: 5 }).map((_, i) => (
-										<Star
-											key={i}
-											className={`h-4 w-4 ${
-												i < Math.floor(product.rating.rate)
-													? "fill-yellow-400 text-yellow-400"
-													: "fill-gray-200 text-gray-200"
-											}`}
-										/>
-									))} */}
-								</div>
-								{/* <span className="text-sm text-muted-foreground">
-									{product.rating.rate.toFixed(1)} ({product.rating.count})
-								</span> */}
+								<div className="flex items-center gap-1"></div>
 							</div>
-
-							{/* <Badge className="h-5" variant="secondary">
-								{product.category}
-							</Badge> */}
 						</div>
 
 						<span className="text-2xl font-bold text-destructive mb-2">
@@ -136,21 +117,9 @@ function RouteComponent() {
 						src={product.image || "/placeholder.svg"}
 						alt={product.title}
 						className="object-contain p-6 transition-transform group-hover:scale-105 w-2xs"
-
-						// fill
 					/>
 				</CardContent>
 			</Card>
-			{/* Hello "/dashboard/products/$productId"! <h1>{productId}</h1> */}
-			{/* <ProductCard
-				id={product.id}
-				title={product.title}
-				price={product.price}
-				description={product.description}
-				category={product.category}
-				image={product.image}
-				rating={product.rating}
-			/> */}
 		</div>
 	);
 }
