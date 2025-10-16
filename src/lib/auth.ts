@@ -71,8 +71,8 @@ export const validateLoginForm = (
 ): ValidationError[] => {
 	const errors: ValidationError[] = [];
 
-	const emailError = validateEmail(credentials.email);
-	if (emailError) errors.push(emailError);
+	const usernameError = validateUsername(credentials.username);
+	if (usernameError) errors.push(usernameError);
 
 	if (!credentials.password) {
 		errors.push({ field: "password", message: "Password is required" });

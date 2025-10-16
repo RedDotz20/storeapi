@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCartWithToast } from "@/hooks/useCartWithToast";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +40,7 @@ function CartPage() {
 						Add some products to get started!
 					</p>
 					<Button asChild>
-						<a href="/dashboard">Continue Shopping</a>
+						<Link to="/dashboard">Continue Shopping</Link>
 					</Button>
 				</div>
 			</div>
@@ -146,7 +146,7 @@ function CartPage() {
 								Proceed to Checkout
 							</Button>
 							<Button variant="outline" className="w-full" asChild>
-								<a href="/dashboard">Continue Shopping</a>
+								<Link to="/dashboard">Continue Shopping</Link>
 							</Button>
 						</CardFooter>
 					</Card>

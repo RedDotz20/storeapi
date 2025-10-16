@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	LoginCredentials,
-	PlatziLoginResponse,
-	PlatziUser,
+	FakeStoreLoginResponse,
+	FakeStoreUser,
 	User,
 } from "../types/auth";
 import { config } from "@/components/config";
@@ -13,14 +13,14 @@ const API_BASE_URL = config.apiBaseUrl;
 // API functions
 export const loginUser = async (
 	credentials: LoginCredentials
-): Promise<PlatziLoginResponse> => {
+): Promise<FakeStoreLoginResponse> => {
 	const response = await fetch(`${API_BASE_URL}/auth/login`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({
-			email: credentials.email,
+			username: credentials.username,
 			password: credentials.password,
 		}),
 	});
@@ -32,11 +32,13 @@ export const loginUser = async (
 	return response.json();
 };
 
-export const getUserProfile = async (token: string): Promise<PlatziUser> => {
-	const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+export const getUserProfile = async (
+	userId: number
+): Promise<FakeStoreUser> => {
+	const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
 		method: "GET",
 		headers: {
-			Authorization: `Bearer ${token}`,
+			"Content-Type": "application/json",
 		},
 	});
 
@@ -47,13 +49,13 @@ export const getUserProfile = async (token: string): Promise<PlatziUser> => {
 	return response.json();
 };
 
-// Helper function to convert PlatziUser to our User type
-export const mapPlatziUserToUser = (platziUser: PlatziUser): User => {
+// Helper function to convert FakeStoreUser to our User type
+export const mapFakeStoreUserToUser = (fakeStoreUser: FakeStoreUser): User => {
 	return {
-		id: platziUser.id,
-		username: platziUser.name,
-		email: platziUser.email,
-		role: platziUser.role === "admin" ? "admin" : "user",
+		id: fakeStoreUser.id,
+		username: fakeStoreUser.username,
+		email: fakeStoreUser.email,
+		role: "user", // FakeStoreAPI doesn't have roles, default to user
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};
@@ -69,11 +71,11 @@ export const useLoginMutation = () => {
 	});
 };
 
-export const useUserQuery = (token: string | null) => {
+export const useUserQuery = (userId: number | null) => {
 	return useQuery({
-		queryKey: ["user", token],
-		queryFn: () => getUserProfile(token!),
-		enabled: !!token,
+		queryKey: ["user", userId],
+		queryFn: () => getUserProfile(userId!),
+		enabled: !!userId,
 		staleTime: 5 * 60 * 1000, // 5 minutes
 	});
 };

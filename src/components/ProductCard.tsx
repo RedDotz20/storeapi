@@ -1,14 +1,14 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Star } from "lucide-react";
 import type { ProductType } from "@/types/products.types";
 import { Link } from "@tanstack/react-router";
 import { useCartWithToast } from "@/hooks/useCartWithToast";
 
 type ProductProps = Pick<
 	ProductType,
-	"id" | "title" | "price" | "description" | "category" | "images"
+	"id" | "title" | "price" | "description" | "category" | "image" | "rating"
 >;
 
 export function ProductCard({
@@ -17,7 +17,8 @@ export function ProductCard({
 	price,
 	description,
 	category,
-	images,
+	image,
+	rating,
 }: ProductProps) {
 	const { addToCart } = useCartWithToast();
 
@@ -29,7 +30,7 @@ export function ProductCard({
 			id,
 			title,
 			price,
-			image: images[0] || "/placeholder.svg",
+			image: image || "/placeholder.svg",
 		});
 	};
 	return (
@@ -40,13 +41,13 @@ export function ProductCard({
 			>
 				<div className="relative aspect-square overflow-hidden bg-secondary">
 					<img
-						src={images[0] || "/placeholder.svg"}
+						src={image || "/placeholder.svg"}
 						alt={title}
 						// fill
 						className="object-contain p-6 transition-transform group-hover:scale-105"
 					/>
 					<Badge className="absolute top-3 left-3 bg-card text-card-foreground border">
-						{category.name}
+						{category}
 					</Badge>
 				</div>
 				<CardContent className="p-4 space-y-3">
@@ -63,7 +64,7 @@ export function ProductCard({
 					</p>
 					<div className="flex items-center gap-2">
 						<div className="flex items-center gap-1">
-							{/* {Array.from({ length: 5 }).map((_, i) => (
+							{Array.from({ length: 5 }).map((_, i) => (
 								<Star
 									key={i}
 									className={`h-4 w-4 ${
@@ -72,11 +73,11 @@ export function ProductCard({
 											: "fill-gray-200 text-gray-200"
 									}`}
 								/>
-							))} */}
+							))}
 						</div>
-						{/* <span className="text-sm text-muted-foreground">
+						<span className="text-sm text-muted-foreground">
 							{rating.rate.toFixed(1)} ({rating.count})
-						</span> */}
+						</span>
 					</div>
 				</CardContent>
 			</Link>

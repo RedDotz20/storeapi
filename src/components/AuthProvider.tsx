@@ -21,7 +21,7 @@ import {
 	setStoredUser,
 	clearStoredUser,
 	getUserProfile,
-	mapPlatziUserToUser,
+	mapFakeStoreUserToUser,
 } from "../lib/api";
 
 // Auth action types
@@ -125,12 +125,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			// Call the API using TanStack Query mutation
 			const loginResponse = await loginMutation.mutateAsync(credentials);
 
-			// Store the access token
-			setStoredToken(loginResponse.access_token);
+			// Store the token
+			setStoredToken(loginResponse.token);
 
-			// Fetch user profile using the access token
-			const platziUser = await getUserProfile(loginResponse.access_token);
-			const user = mapPlatziUserToUser(platziUser);
+			// FakeStoreAPI doesn't provide user info from token
+			// For demo purposes, fetch user with ID 1 (or map username to ID)
+			// In a real app, you'd decode the JWT token to get user ID
+			const userId = 1; // Default test user for FakeStoreAPI
+			const fakeStoreUser = await getUserProfile(userId);
+			const user = mapFakeStoreUserToUser(fakeStoreUser);
 
 			setStoredUser(user);
 			dispatch({ type: "AUTH_SUCCESS", payload: user });

@@ -44,7 +44,7 @@ function RouteComponent() {
 				id: product.id,
 				title: product.title,
 				price: product.price,
-				image: product.images[0] || "/placeholder.svg",
+				image: product.image || "/placeholder.svg",
 			},
 			quantity
 		);
@@ -133,7 +133,7 @@ function RouteComponent() {
 
 				<CardContent className="flex-1">
 					<img
-						src={product.images[0] || "/placeholder.svg"}
+						src={product.image || "/placeholder.svg"}
 						alt={product.title}
 						className="object-contain p-6 transition-transform group-hover:scale-105 w-2xs"
 
