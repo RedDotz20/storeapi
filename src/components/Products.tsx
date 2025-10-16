@@ -1,14 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/lib/productsApi";
 import { ProductCard } from "./ProductCard";
+import ProductFilters, { type FilterState } from "./ProductFilters";
 import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupInput,
 } from "@/components/ui/input-group";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
+
+type SortOption =
+	| "name-asc"
+	| "name-desc"
+	| "price-asc"
+	| "price-desc"
+	| "rating-asc"
+	| "rating-desc";
 
 export default function Products() {
 	const { isLoading, error, data } = useQuery({
@@ -19,9 +35,34 @@ export default function Products() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [showSuggestions, setShowSuggestions] = useState(false);
 	const [selectedIndex, setSelectedIndex] = useState(-1);
+	const [sortBy, setSortBy] = useState<SortOption>("rating-desc");
 	const debounceQuery = useDebounce(searchQuery, 300);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const suggestionsRef = useRef<HTMLDivElement>(null);
+
+	// Calculate max price from products
+	const maxPrice = useMemo(() => {
+		if (!data) return 1000;
+		return Math.ceil(Math.max(...data.map(p => p.price)) / 10) * 10;
+	}, [data]);
+
+	// Filter state
+	const [filters, setFilters] = useState<FilterState>(() => ({
+		categories: [],
+		priceRange: [0, 1000],
+		minRating: 0,
+	}));
+
+	// Update price range max when maxPrice is calculated
+	useEffect(() => {
+		if (maxPrice > 0 && filters.priceRange[1] === 1000) {
+			setFilters(prev => ({
+				...prev,
+				priceRange: [0, maxPrice],
+			}));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [maxPrice]);
 
 	// Get autocomplete suggestions based on search query
 	const suggestions =
@@ -97,17 +138,67 @@ export default function Products() {
 		}
 	}, [suggestions.length, searchQuery]);
 
-	// Filter products based on search query
-	const filteredProducts = data?.filter(product => {
-		if (!debounceQuery) return true;
+	// Filter products based on search query and filters
+	const filteredProducts = useMemo(() => {
+		let results = data?.filter(product => {
+			// Search filter
+			if (debounceQuery) {
+				const searchLower = debounceQuery.toLowerCase();
+				const matchesSearch =
+					product.title.toLowerCase().includes(searchLower) ||
+					product.description.toLowerCase().includes(searchLower) ||
+					product.category.toLowerCase().includes(searchLower);
+				if (!matchesSearch) return false;
+			}
 
-		const searchLower = debounceQuery.toLowerCase();
-		return (
-			product.title.toLowerCase().includes(searchLower) ||
-			product.description.toLowerCase().includes(searchLower) ||
-			product.category.toLowerCase().includes(searchLower)
-		);
-	});
+			// Category filter
+			if (
+				filters.categories.length > 0 &&
+				!filters.categories.includes(product.category)
+			) {
+				return false;
+			}
+
+			// Price filter
+			if (
+				product.price < filters.priceRange[0] ||
+				product.price > filters.priceRange[1]
+			) {
+				return false;
+			}
+
+			// Rating filter
+			if (product.rating.rate < filters.minRating) {
+				return false;
+			}
+
+			return true;
+		});
+
+		// Apply sorting
+		if (results) {
+			results = [...results].sort((a, b) => {
+				switch (sortBy) {
+					case "name-asc":
+						return a.title.localeCompare(b.title);
+					case "name-desc":
+						return b.title.localeCompare(a.title);
+					case "price-asc":
+						return a.price - b.price;
+					case "price-desc":
+						return b.price - a.price;
+					case "rating-asc":
+						return a.rating.rate - b.rating.rate;
+					case "rating-desc":
+						return b.rating.rate - a.rating.rate;
+					default:
+						return 0;
+				}
+			});
+		}
+
+		return results;
+	}, [data, debounceQuery, filters, sortBy]);
 
 	if (isLoading) {
 		return <h1>Loading</h1>;
@@ -118,63 +209,118 @@ export default function Products() {
 	}
 
 	return (
-		<div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-			<div className="relative mb-4">
-				<InputGroup>
-					<InputGroupInput
-						ref={inputRef}
-						placeholder="Search products..."
-						value={searchQuery}
-						onChange={handleSearchQuery}
-						onKeyDown={handleKeyDown}
-						onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
+		<div className="max-w-[1600px] mx-auto py-4 px-2 sm:px-4 md:px-6 lg:px-8">
+			<div className="flex flex-col lg:flex-row gap-6">
+				{/* Filters Sidebar */}
+				<aside className="w-full lg:w-auto flex-shrink-0">
+					<ProductFilters
+						filters={filters}
+						onFilterChange={setFilters}
+						maxPrice={maxPrice}
 					/>
-					<InputGroupAddon>
-						<Search />
-					</InputGroupAddon>
-					<InputGroupAddon align="inline-end">
-						{filteredProducts?.length} results
-					</InputGroupAddon>
-				</InputGroup>
+				</aside>
 
-				{/* Autocomplete Suggestions Dropdown */}
-				{showSuggestions && suggestions.length > 0 && (
-					<div
-						ref={suggestionsRef}
-						className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
-					>
-						{suggestions.map((suggestion, index) => (
-							<div
-								key={index}
-								className={`px-4 py-2 cursor-pointer transition-colors ${
-									index === selectedIndex
-										? "bg-blue-500 text-white"
-										: "hover:bg-gray-100"
-								}`}
-								onClick={() => handleSuggestionClick(suggestion)}
-								onMouseEnter={() => setSelectedIndex(index)}
+				{/* Main Content */}
+				<div className="flex-1 min-w-0">
+					<div className="flex flex-col sm:flex-row gap-3 mb-4">
+						{/* Search Bar */}
+						<div className="relative flex-1">
+							<InputGroup>
+								<InputGroupInput
+									ref={inputRef}
+									placeholder="Search products..."
+									value={searchQuery}
+									onChange={handleSearchQuery}
+									onKeyDown={handleKeyDown}
+									onFocus={() =>
+										searchQuery.length >= 2 && setShowSuggestions(true)
+									}
+									className="w-full text-base md:text-lg"
+								/>
+								<InputGroupAddon>
+									<Search />
+								</InputGroupAddon>
+								<InputGroupAddon align="inline-end">
+									{filteredProducts?.length} results
+								</InputGroupAddon>
+							</InputGroup>
+
+							{/* Autocomplete Suggestions Dropdown */}
+							{showSuggestions && suggestions.length > 0 && (
+								<div
+									ref={suggestionsRef}
+									className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
+								>
+									{suggestions.map((suggestion, index) => (
+										<div
+											key={index}
+											className={`px-4 py-2 cursor-pointer transition-colors ${
+												index === selectedIndex
+													? "bg-blue-500 text-white"
+													: "hover:bg-gray-100"
+											}`}
+											onClick={() => handleSuggestionClick(suggestion)}
+											onMouseEnter={() => setSelectedIndex(index)}
+										>
+											{suggestion}
+										</div>
+									))}
+								</div>
+							)}
+						</div>
+
+						{/* Sort Dropdown */}
+						<div className="w-full sm:w-64">
+							<Select
+								value={sortBy}
+								onValueChange={value => setSortBy(value as SortOption)}
 							>
-								{suggestion}
-							</div>
-						))}
+								<SelectTrigger className="w-full">
+									<SelectValue placeholder="Sort by" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="rating-desc">
+										Rating: High to Low
+									</SelectItem>
+									<SelectItem value="rating-asc">
+										Rating: Low to High
+									</SelectItem>
+									<SelectItem value="price-asc">Price: Low to High</SelectItem>
+									<SelectItem value="price-desc">Price: High to Low</SelectItem>
+									<SelectItem value="name-asc">Name: A to Z</SelectItem>
+									<SelectItem value="name-desc">Name: Z to A</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
 					</div>
-				)}
-			</div>
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-				{filteredProducts?.map(product => {
-					return (
-						<ProductCard
-							key={product.id}
-							id={product.id}
-							title={product.title}
-							price={product.price}
-							description={product.description}
-							category={product.category}
-							image={product.image}
-							rating={product.rating}
-						/>
-					);
-				})}
+
+					{/* Products Grid */}
+					{filteredProducts && filteredProducts.length > 0 ? (
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+							{filteredProducts.map(product => {
+								return (
+									<ProductCard
+										key={product.id}
+										id={product.id}
+										title={product.title}
+										price={product.price}
+										description={product.description}
+										category={product.category}
+										image={product.image}
+										rating={product.rating}
+									/>
+								);
+							})}
+						</div>
+					) : (
+						<div className="flex flex-col items-center justify-center py-12 text-center">
+							<p className="text-lg text-gray-600 mb-2">No products found</p>
+							<p className="text-sm text-gray-400">
+								Try adjusting your filters or search query
+							</p>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);

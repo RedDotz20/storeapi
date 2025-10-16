@@ -34,7 +34,7 @@ export function ProductCard({
 		});
 	};
 	return (
-		<Card className="group overflow-hidden transition-all hover:shadow-lg flex flex-col h-full">
+		<Card className="group overflow-hidden transition-all hover:shadow-sm hover:shadow-primary flex flex-col h-full">
 			<Link
 				to={`/dashboard/products/$productId`}
 				params={{ productId: id.toString() }}
@@ -44,30 +44,33 @@ export function ProductCard({
 					<img
 						src={image || "/placeholder.svg"}
 						alt={title}
-						className="w-full h-full object-contain p-6 transition-transform group-hover:scale-105 bg-white"
+						className="w-full h-full object-contain p-4 sm:p-6 transition-transform group-hover:scale-105 bg-white"
 					/>
 				</div>
-				<Badge className="absolute top-0 left-4 bg-card text-card-foreground border">
+				<Badge
+					variant="secondary"
+					className="absolute top-2 left-2 sm:left-4 bg-primary text-card border text-xs sm:text-sm"
+				>
 					{category}
 				</Badge>
-				<CardContent className="p-4 space-y-3 flex-1 flex flex-col">
-					<div className="flex items-start justify-between gap-2">
-						<h3 className="font-semibold text-lg leading-tight line-clamp-2 text-balance">
+				<CardContent className="p-3 sm:p-4 space-y-2 sm:space-y-3 flex-1 flex flex-col">
+					<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-2">
+						<h3 className="font-semibold text-base sm:text-lg leading-tight line-clamp-2 text-balance">
 							{title}
 						</h3>
-						<p className="font-bold text-xl whitespace-nowrap">
+						<p className="font-bold text-lg sm:text-xl whitespace-nowrap">
 							${price.toFixed(2)}
 						</p>
 					</div>
-					<p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed min-h-[2.5rem]">
+					<p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-relaxed min-h-[2.5rem]">
 						{description}
 					</p>
-					<div className="flex items-center gap-2 mt-auto">
+					<div className="flex items-center gap-1 sm:gap-2 mt-auto">
 						<div className="flex items-center gap-1">
 							{Array.from({ length: 5 }).map((_, i) => (
 								<Star
 									key={i}
-									className={`h-4 w-4 ${
+									className={`h-3 w-3 sm:h-4 sm:w-4 ${
 										i < Math.floor(rating.rate)
 											? "fill-yellow-400 text-yellow-400"
 											: "fill-gray-200 text-gray-200"
@@ -75,16 +78,16 @@ export function ProductCard({
 								/>
 							))}
 						</div>
-						<span className="text-sm text-muted-foreground">
+						<span className="text-xs sm:text-sm text-muted-foreground">
 							{rating.rate.toFixed(1)} ({rating.count})
 						</span>
 					</div>
 				</CardContent>
 			</Link>
-			<CardFooter className="p-4 pt-0">
+			<CardFooter className="p-3 sm:p-4 pt-0">
 				<Button className="w-full" size="lg" onClick={handleAddToCart}>
 					<ShoppingCart className="mr-2 h-4 w-4" />
-					Add to Cart
+					<span className="text-xs sm:text-base">Add to Cart</span>
 				</Button>
 			</CardFooter>
 		</Card>

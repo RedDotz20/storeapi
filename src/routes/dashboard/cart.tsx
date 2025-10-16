@@ -48,37 +48,37 @@ function CartPage() {
 	}
 
 	return (
-		<div className="min-h-screen w-full container mx-auto py-8">
-			<div className="flex justify-between items-center mb-8">
-				<h1 className="text-3xl font-bold">Shopping Cart</h1>
+		<div className="min-h-screen w-full container mx-auto py-4 px-2 sm:px-4 md:px-8">
+			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+				<h1 className="text-2xl sm:text-3xl font-bold">Shopping Cart</h1>
 				<Button variant="outline" onClick={clearCart}>
 					Clear Cart
 				</Button>
 			</div>
 
-			<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
 				{/* Cart Items */}
-				<div className="lg:col-span-2 space-y-4">
+				<div className="md:col-span-2 space-y-3 md:space-y-4">
 					{cart.items.map(item => (
-						<Card key={item.id} className="p-4">
-							<div className="flex items-center gap-4">
+						<Card key={item.id} className="p-2 sm:p-4">
+							<div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
 								<img
 									src={item.image}
 									alt={item.title}
-									className="w-20 h-20 object-contain rounded-md bg-gray-50"
+									className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-md bg-gray-50"
 								/>
 
 								<div className="flex-1 min-w-0">
-									<h3 className="font-semibold text-lg line-clamp-2">
+									<h3 className="font-semibold text-base sm:text-lg line-clamp-2">
 										{item.title}
 									</h3>
-									<p className="text-lg font-bold text-destructive">
+									<p className="text-base sm:text-lg font-bold text-destructive">
 										${item.price.toFixed(2)}
 									</p>
 								</div>
 
 								{/* Quantity Controls */}
-								<div className="flex items-center gap-2">
+								<div className="flex items-center gap-1 sm:gap-2 mt-2 sm:mt-0">
 									<Button
 										variant="outline"
 										size="sm"
@@ -87,7 +87,7 @@ function CartPage() {
 									>
 										<Minus className="h-4 w-4" />
 									</Button>
-									<span className="w-12 text-center font-medium">
+									<span className="w-10 sm:w-12 text-center font-medium">
 										{item.quantity}
 									</span>
 									<Button
@@ -110,8 +110,8 @@ function CartPage() {
 								</Button>
 
 								{/* Item Total */}
-								<div className="text-right">
-									<p className="font-bold">
+								<div className="text-right mt-2 sm:mt-0">
+									<p className="font-bold text-xs sm:text-base">
 										${(item.price * item.quantity).toFixed(2)}
 									</p>
 								</div>
@@ -121,27 +121,29 @@ function CartPage() {
 				</div>
 
 				{/* Cart Summary */}
-				<div className="lg:col-span-1">
-					<Card className="p-6 sticky top-4">
+				<div className="md:col-span-1">
+					<Card className="p-4 sm:p-6 sticky top-4">
 						<CardHeader>
-							<CardTitle>Order Summary</CardTitle>
+							<CardTitle className="text-base sm:text-lg">
+								Order Summary
+							</CardTitle>
 						</CardHeader>
-						<CardContent className="space-y-4">
-							<div className="flex justify-between">
+						<CardContent className="space-y-3 sm:space-y-4">
+							<div className="flex justify-between text-sm sm:text-base">
 								<span>Items ({cart.totalItems})</span>
 								<span>${cart.totalPrice.toFixed(2)}</span>
 							</div>
-							<div className="flex justify-between">
+							<div className="flex justify-between text-sm sm:text-base">
 								<span>Shipping</span>
 								<span>Free</span>
 							</div>
 							<hr />
-							<div className="flex justify-between font-bold text-lg">
+							<div className="flex justify-between font-bold text-base sm:text-lg">
 								<span>Total</span>
 								<span>${cart.totalPrice.toFixed(2)}</span>
 							</div>
 						</CardContent>
-						<CardFooter className="flex flex-col gap-3">
+						<CardFooter className="flex flex-col gap-2 sm:gap-3">
 							<Button className="w-full" size="lg">
 								Proceed to Checkout
 							</Button>
