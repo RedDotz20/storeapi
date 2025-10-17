@@ -6,6 +6,7 @@ import { AuthProvider } from "../components/AuthProvider";
 import { CartProvider } from "../components/CartProvider";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { ToastProvider } from "../components/ui/toast";
+import { NotFound } from "../components/ui/not-found";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
@@ -40,5 +41,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				</CartProvider>
 			</AuthProvider>
 		</ThemeProvider>
+	),
+	notFoundComponent: () => (
+		<div className="min-h-screen w-full">
+			<NotFound />
+		</div>
 	),
 });

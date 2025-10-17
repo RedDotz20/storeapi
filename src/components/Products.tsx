@@ -14,6 +14,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { ProductsGridSkeleton } from "@/components/ui/skeleton";
+import { ProductsErrorState } from "@/components/ui/error-state";
 import { Search } from "lucide-react";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -31,7 +33,7 @@ export default function Products() {
 	const navigate = useNavigate({ from: "/dashboard" });
 	const searchParams = useSearch({ from: "/dashboard/" });
 
-	const { isLoading, error, data } = useQuery({
+	const { isLoading, error, data, refetch } = useQuery({
 		queryKey: ["products"],
 		queryFn: () => getProducts(),
 	});
@@ -246,12 +248,12 @@ export default function Products() {
 		return results;
 	}, [data, debounceQuery, filters, sortBy]);
 
-	if (isLoading) {
-		return <h1>Loading</h1>;
-	}
-
 	if (error) {
-		return <h1>Something Went Wrong</h1>;
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<ProductsErrorState onRetry={() => refetch()} />
+			</div>
+		);
 	}
 
 	return (
@@ -341,7 +343,9 @@ export default function Products() {
 					</div>
 
 					{/* Products Grid */}
-					{filteredProducts && filteredProducts.length > 0 ? (
+					{isLoading ? (
+						<ProductsGridSkeleton count={12} />
+					) : filteredProducts && filteredProducts.length > 0 ? (
 						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
 							{filteredProducts.map(product => {
 								return (

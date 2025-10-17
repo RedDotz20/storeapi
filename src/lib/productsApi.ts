@@ -1,81 +1,37 @@
+/**
+ * Products API - Refactored to use ProductsService
+ *
+ * This file now delegates to ProductsService following SOLID principles.
+ * Acts as a facade for backward compatibility.
+ *
+ * New code should import ProductsService directly.
+ */
+
 import type { ProductListsType, ProductType } from "@/types/products.types";
-import { config } from "@/components/config";
+import { productsService } from "@/services/ProductsService";
 
-const API_BASE_URL = config.apiBaseUrl;
-
-// Get all products
+// Get all products - delegates to ProductsService
 export const getProducts = async (
 	limit?: number
 ): Promise<ProductListsType> => {
-	const url = limit
-		? `${API_BASE_URL}/products?limit=${limit}`
-		: `${API_BASE_URL}/products`;
-
-	const response = await fetch(url, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	if (!response.ok) {
-		throw new Error("Failed to Fetch Products");
-	}
-
-	return response.json();
+	return productsService.getProducts(limit);
 };
 
-// Get single product by ID
+// Get single product by ID - delegates to ProductsService
 export const getProductById = async (
 	id: string | number
 ): Promise<ProductType> => {
-	const response = await fetch(`${API_BASE_URL}/products/${id}`, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	if (!response.ok) {
-		throw new Error(`Failed to Fetch Product ${id}`);
-	}
-
-	return response.json();
+	return productsService.getProductById(id);
 };
 
-// Get all categories
+// Get all categories - delegates to ProductsService
 export const getCategories = async (): Promise<string[]> => {
-	const response = await fetch(`${API_BASE_URL}/products/categories`, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	if (!response.ok) {
-		throw new Error("Failed to Fetch Categories");
-	}
-
-	return response.json();
+	return productsService.getCategories();
 };
 
-// Get products by category
+// Get products by category - delegates to ProductsService
 export const getProductsByCategory = async (
 	category: string
 ): Promise<ProductListsType> => {
-	const response = await fetch(
-		`${API_BASE_URL}/products/category/${category}`,
-		{
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}
-	);
-
-	if (!response.ok) {
-		throw new Error("Failed to Fetch Products by Category");
-	}
-
-	return response.json();
+	return productsService.getProductsByCategory(category);
 };

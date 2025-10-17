@@ -1,305 +1,500 @@
-Welcome to your new TanStack app!
+# 🛒 StoreAPI - Modern E-Commerce Application
 
-# Getting Started
+A modern, production-ready e-commerce application built with React, TypeScript, and TanStack Router. Features a complete shopping experience with authentication, product browsing, cart management, and theme customization.
 
-To run this application:
+Built with **SOLID principles** for maintainability, testability, and scalability.
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.2-61dafb.svg)](https://reactjs.org/)
+[![TanStack Router](https://img.shields.io/badge/TanStack_Router-Latest-orange.svg)](https://tanstack.com/router)
+[![Vite](https://img.shields.io/badge/Vite-7.1-646cff.svg)](https://vitejs.dev/)
+
+## ✨ Features
+
+### 🔐 Authentication
+- User login and registration
+- Persistent authentication with localStorage
+- Protected routes with automatic redirects
+- Token-based authentication system
+
+### 🛍️ Shopping Experience
+- Browse products with filtering and sorting
+- Search functionality with debouncing
+- Filter by categories, price range, and ratings
+- Detailed product views
+- Responsive product cards
+
+### 🛒 Shopping Cart
+- Add/remove items
+- Update quantities
+- Real-time total calculations
+- Toast notifications for cart actions
+- Persistent cart state
+
+### 🎨 Theming
+- Light/Dark/System theme modes
+- Persistent theme preferences
+- Smooth theme transitions
+- System theme detection
+
+### 🏗️ Architecture
+- **SOLID Principles** implementation
+- Service-based architecture
+- Clean separation of concerns
+- Dependency injection ready
+- Fully typed with TypeScript
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** 18+
+- **pnpm** 10+ (recommended package manager)
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/RedDotz20/storeapi.git
+cd storeapi
+
+# Install dependencies
 pnpm install
+
+# Start development server
 pnpm start
 ```
 
-# Building For Production
+The application will be available at `http://localhost:3000`
 
-To build this application for production:
+### Demo Credentials
 
-```bash
-pnpm build
+To test the application, use these credentials:
+
+```
+Username: mor_2314
+Password: 83r5^_
 ```
 
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+### Available Scripts
 
 ```bash
-pnpm test
+# Development
+pnpm dev          # Start Vite dev server (default port)
+pnpm start        # Start dev server on port 3000
+
+# Production
+pnpm build        # Build for production
+pnpm serve        # Preview production build
+
+# Testing
+pnpm test         # Run tests with Vitest
+
+# Code Quality
+pnpm lint         # Run ESLint
+pnpm lint:fix     # Fix ESLint issues
+pnpm format       # Format with Prettier
+pnpm format:check # Check formatting
+pnpm check        # Run lint + format check
 ```
 
-## Styling
+## 🏛️ Architecture & SOLID Principles
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+This project follows **SOLID principles** for clean, maintainable code:
 
-## Linting & Formatting
+### Service Layer Architecture
 
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
-
-```bash
-pnpm lint
-pnpm format
-pnpm check
+```
+┌─────────────────────────────────────┐
+│      React Components (UI)          │
+│  Presentation & User Interaction    │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│      Context Providers               │
+│   State Management Only             │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│         Services Layer               │
+│   Business Logic & Operations       │
+│  Auth │ Theme │ Cart │ Products     │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│   Infrastructure Services            │
+│  HttpClient │ StorageService        │
+└─────────────────────────────────────┘
 ```
 
-## Shadcn
+### Services
 
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
+- **AuthService** - Authentication & user management
+- **ThemeService** - Theme logic & system detection
+- **CartService** - Cart calculations & operations
+- **ProductsService** - Product API operations
+- **StorageService** - localStorage/sessionStorage abstraction
+- **HttpClient** - Centralized HTTP request handling
+
+### Benefits
+
+✅ **Single Responsibility** - Each service has one clear purpose
+✅ **Testability** - Services can be tested in isolation
+✅ **Maintainability** - Clear separation of concerns
+✅ **Flexibility** - Easy to swap implementations
+✅ **Type Safety** - Full TypeScript support
+
+📚 **Learn More**: See [SOLID-PRINCIPLES.md](./SOLID-PRINCIPLES.md) for detailed documentation
+
+## 📁 Project Structure
+
+```
+storeapi/
+├── src/
+│   ├── components/          # React components
+│   │   ├── AuthProvider.tsx
+│   │   ├── ThemeProvider.tsx
+│   │   ├── CartProvider.tsx
+│   │   ├── Products.tsx
+│   │   ├── ProductCard.tsx
+│   │   ├── Header.tsx
+│   │   ├── navbar/
+│   │   └── ui/             # shadcn/ui components
+│   ├── services/           # 🆕 Service layer (SOLID)
+│   │   ├── interfaces/     # Service interfaces
+│   │   ├── AuthService.ts
+│   │   ├── ThemeService.ts
+│   │   ├── CartService.ts
+│   │   ├── ProductsService.ts
+│   │   ├── HttpClient.ts
+│   │   ├── StorageService.ts
+│   │   └── index.ts
+│   ├── routes/             # TanStack Router routes
+│   │   ├── __root.tsx
+│   │   ├── index.tsx
+│   │   ├── profile.tsx
+│   │   ├── auth/
+│   │   │   ├── login.tsx
+│   │   │   └── signup.tsx
+│   │   └── dashboard/
+│   │       ├── index.tsx
+│   │       ├── cart.tsx
+│   │       └── products/
+│   ├── types/              # TypeScript types
+│   │   ├── auth.ts
+│   │   ├── cart.types.ts
+│   │   └── products.types.ts
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Utility functions
+│   └── styles.css          # Global styles
+├── public/                 # Static assets
+├── SOLID-PRINCIPLES.md     # 📚 SOLID documentation
+├── SOLID-QUICK-REFERENCE.md
+├── REFACTORING-SUMMARY.md
+└── README.md
+```
+
+## 🛠️ Tech Stack
+
+### Core
+- **React 19.2** - UI library
+- **TypeScript 5.9** - Type safety
+- **Vite 7.1** - Build tool & dev server
+- **pnpm** - Fast, disk space efficient package manager
+
+### Routing & State
+- **TanStack Router** - Type-safe routing
+- **TanStack Query** - Server state management
+- **Context API** - Client state management
+
+### UI & Styling
+- **Tailwind CSS 4.1** - Utility-first CSS
+- **shadcn/ui** - Accessible component library
+- **Radix UI** - Headless UI primitives
+- **Lucide React** - Icon library
+
+### Development
+- **Vitest** - Unit testing
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **TypeScript ESLint** - TypeScript linting
+
+### API
+- **FakeStore API** - Demo e-commerce API
+
+## 🚦 Routing
+
+### Current Routes
+
+```
+/ (root)
+├── /                      # Home/Landing page
+├── /profile               # User profile (protected)
+├── /auth
+│   ├── /auth/login       # Login page
+│   └── /auth/signup      # Signup page
+└── /dashboard            # Dashboard (protected)
+    ├── /dashboard/       # Products listing
+    ├── /dashboard/cart   # Shopping cart
+    └── /dashboard/products/:productId  # Product details
+```
+
+### Navigation
+
+```tsx
+import { Link } from '@tanstack/react-router';
+
+<Link to="/dashboard">Go to Dashboard</Link>
+<Link to="/dashboard/cart">View Cart</Link>
+```
+
+### Protected Routes
+
+```tsx
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+
+// Automatically redirects to /auth/login if not authenticated
+<ProtectedRoute>
+  <YourComponent />
+</ProtectedRoute>
+```
+
+## 💾 State Management
+
+### Using Context Providers
+
+```tsx
+import { useAuth } from '@/components/AuthProvider';
+import { useCart } from '@/components/CartProvider';
+import { useTheme } from '@/components/ThemeProvider';
+
+function MyComponent() {
+  // Authentication
+  const { user, login, logout, isLoading } = useAuth();
+
+  // Shopping cart
+  const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
+
+  // Theme
+  const { theme, setTheme, actualTheme } = useTheme();
+}
+```
+
+### Using Services Directly (Recommended for new code)
+
+```typescript
+import { productsService, authService, cartService } from '@/services';
+
+// Fetch products
+const products = await productsService.getProducts();
+
+// Authenticate
+const user = await authService.login({ username, password });
+
+// Cart operations
+const newCart = cartService.addItem(currentCart, item, quantity);
+```
+
+## 📊 Data Fetching with TanStack Query
+
+```tsx
+import { useQuery } from '@tanstack/react-query';
+import { productsService } from '@/services';
+
+function ProductsList() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['products'],
+    queryFn: () => productsService.getProducts(),
+  });
+
+  if (isLoading) return <Spinner />;
+  if (error) return <div>Error loading products</div>;
+
+  return <ProductGrid products={data} />;
+}
+```
+
+### Query Keys Used
+
+- `['products']` - All products
+- `['products', limit]` - Limited products
+- `['product', id]` - Single product
+- `['categories']` - Product categories
+
+## 🎨 Styling & Theming
+
+### Dark Mode
+
+```tsx
+const { theme, setTheme } = useTheme();
+
+// Set theme
+<button onClick={() => setTheme('dark')}>Dark Mode</button>
+<button onClick={() => setTheme('light')}>Light Mode</button>
+<button onClick={() => setTheme('system')}>System</button>
+```
+
+### Adding UI Components
+
+This project uses **shadcn/ui** components:
 
 ```bash
 pnpx shadcn@latest add button
+pnpx shadcn@latest add card
+pnpx shadcn@latest add dialog
 ```
 
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-	component: () => (
-		<>
-			<header>
-				<nav>
-					<Link to="/">Home</Link>
-					<Link to="/about">About</Link>
-				</nav>
-			</header>
-			<Outlet />
-			<TanStackRouterDevtools />
-		</>
-	),
-});
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-	getParentRoute: () => rootRoute,
-	path: "/people",
-	loader: async () => {
-		const response = await fetch("https://swapi.dev/api/people");
-		return response.json() as Promise<{
-			results: {
-				name: string;
-			}[];
-		}>;
-	},
-	component: () => {
-		const data = peopleRoute.useLoaderData();
-		return (
-			<ul>
-				{data.results.map(person => (
-					<li key={person.name}>{person.name}</li>
-				))}
-			</ul>
-		);
-	},
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
+## 🧪 Testing
 
 ```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
+# Run all tests
+pnpm test
+
+# Watch mode (development)
+pnpm test:watch
+
+# Generate coverage report
+pnpm test:coverage
 ```
 
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
+### Example Test
 
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+```typescript
+import { describe, it, expect } from 'vitest';
+import { CartService } from '@/services/CartService';
 
-// ...
+describe('CartService', () => {
+  it('should add item to cart', () => {
+    const service = new CartService();
+    const state = { items: [], totalItems: 0, totalPrice: 0 };
+    const item = { id: 1, name: 'Product', price: 100 };
 
-const queryClient = new QueryClient();
+    const result = service.addItem(state, item, 1);
 
-// ...
-
-if (!rootElement.innerHTML) {
-	const root = ReactDOM.createRoot(rootElement);
-
-	root.render(
-		<QueryClientProvider client={queryClient}>
-			<RouterProvider router={router} />
-		</QueryClientProvider>
-	);
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-	component: () => (
-		<>
-			<Outlet />
-			<ReactQueryDevtools buttonPosition="top-right" />
-			<TanStackRouterDevtools />
-		</>
-	),
+    expect(result.totalItems).toBe(1);
+    expect(result.totalPrice).toBe(100);
+  });
 });
 ```
 
-Now you can use `useQuery` to fetch your data.
+## 🔒 Authentication Flow
 
-```tsx
-import { useQuery } from "@tanstack/react-query";
+1. User enters credentials on `/auth/login`
+2. `AuthService` validates with FakeStore API
+3. Token stored in localStorage via `StorageService`
+4. User redirected to dashboard
+5. Protected routes check authentication status
+6. Logout clears token and redirects to home
 
-import "./App.css";
+## 🔧 Configuration
 
-function App() {
-	const { data } = useQuery({
-		queryKey: ["people"],
-		queryFn: () =>
-			fetch("https://swapi.dev/api/people")
-				.then(res => res.json())
-				.then(data => data.results as { name: string }[]),
-		initialData: [],
-	});
+### Environment Variables
 
-	return (
-		<div>
-			<ul>
-				{data.map(person => (
-					<li key={person.name}>{person.name}</li>
-				))}
-			</ul>
-		</div>
-	);
-}
+Create a `.env` file:
 
-export default App;
+```env
+# API Configuration
+VITE_API_BASE_URL=https://fakestoreapi.com
 ```
 
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
+### Customizing API
 
-## State Management
+Edit `src/components/config.ts`:
 
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
+```typescript
+export const config = {
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || 'https://fakestoreapi.com',
+};
+```
 
-First you need to add TanStack Store as a dependency:
+## 🚀 Deployment
+
+### Netlify (Recommended)
+
+The project includes Netlify configuration in `netlify.toml`:
+
+1. Push to GitHub
+2. Connect repository in Netlify
+3. Deploy automatically on push
+
+### Manual Build
 
 ```bash
-pnpm add @tanstack/store
+pnpm build       # Creates dist/ folder
+pnpm serve       # Preview production build
 ```
 
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
+## 📝 Development Guidelines
 
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
+### Adding New Features
 
-const countStore = new Store(0);
+1. **Create Service** (if needed):
+   ```typescript
+   // src/services/MyService.ts
+   export class MyService implements IMyService {
+     // Business logic here
+   }
+   ```
 
-function App() {
-	const count = useStore(countStore);
-	return (
-		<div>
-			<button onClick={() => countStore.setState(n => n + 1)}>
-				Increment - {count}
-			</button>
-		</div>
-	);
-}
+2. **Create Interface**:
+   ```typescript
+   // src/services/interfaces/IMyService.ts
+   export interface IMyService {
+     myMethod(): Promise<Result>;
+   }
+   ```
 
-export default App;
-```
+3. **Use in Component**:
+   ```tsx
+   import { myService } from '@/services';
 
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
+   function MyComponent() {
+     const result = await myService.myMethod();
+   }
+   ```
 
-Let's check this out by doubling the count using derived state.
+### Code Style
 
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
+- Use TypeScript for type safety
+- Follow SOLID principles
+- Write services for business logic
+- Keep components focused on UI
+- Use interfaces for contracts
 
-const countStore = new Store(0);
+## 🤝 Contributing
 
-const doubledStore = new Derived({
-	fn: () => countStore.state * 2,
-	deps: [countStore],
-});
-doubledStore.mount();
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
-function App() {
-	const count = useStore(countStore);
-	const doubledCount = useStore(doubledStore);
+## 📚 Additional Documentation
 
-	return (
-		<div>
-			<button onClick={() => countStore.setState(n => n + 1)}>
-				Increment - {count}
-			</button>
-			<div>Doubled - {doubledCount}</div>
-		</div>
-	);
-}
+- [SOLID Principles Guide](./SOLID-PRINCIPLES.md) - Detailed architecture explanation
+- [Quick Reference](./SOLID-QUICK-REFERENCE.md) - Quick reference guide
+- [Refactoring Summary](./REFACTORING-SUMMARY.md) - Overview of refactoring changes
 
-export default App;
-```
+## 🔗 Resources
 
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
+- [TanStack Router Docs](https://tanstack.com/router)
+- [TanStack Query Docs](https://tanstack.com/query)
+- [Tailwind CSS Docs](https://tailwindcss.com)
+- [shadcn/ui Docs](https://ui.shadcn.com)
+- [FakeStore API Docs](https://fakestoreapi.com)
+- [Vitest Docs](https://vitest.dev)
 
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
+## 📄 License
 
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
+This project is open source and available under the MIT License.
 
-# Demo files
+## 👤 Author
 
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
+**RedDotz20**
 
-# Learn More
+- GitHub: [@RedDotz20](https://github.com/RedDotz20)
+- Repository: [storeapi](https://github.com/RedDotz20/storeapi)
 
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+---
+
+Built with ❤️ using React, TypeScript, and SOLID principles

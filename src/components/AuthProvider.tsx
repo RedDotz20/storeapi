@@ -12,17 +12,7 @@ import type {
 	SignupCredentials,
 	User,
 } from "../types/auth";
-import {
-	useLoginMutation,
-	getStoredToken,
-	setStoredToken,
-	clearStoredToken,
-	getStoredUser,
-	setStoredUser,
-	clearStoredUser,
-	getUserProfile,
-	mapFakeStoreUserToUser,
-} from "../lib/api";
+import { authService } from "@/services/AuthService";
 
 // Auth action types
 type AuthAction =
@@ -99,13 +89,12 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const [state, dispatch] = useReducer(authReducer, initialAuthState);
-	const loginMutation = useLoginMutation();
 
 	// Check for stored authentication on mount
 	useEffect(() => {
 		const checkStoredAuth = () => {
-			const storedUser = getStoredUser();
-			const storedToken = getStoredToken();
+			const storedUser = authService.getStoredUser();
+			const storedToken = authService.getStoredToken();
 
 			if (storedUser && storedToken) {
 				dispatch({ type: "AUTH_SUCCESS", payload: storedUser });
@@ -117,25 +106,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		checkStoredAuth();
 	}, []);
 
-	// Login function using TanStack Query
+	// Login function using AuthService
 	const login = async (credentials: LoginCredentials): Promise<void> => {
 		try {
 			dispatch({ type: "AUTH_START" });
 
-			// Call the API using TanStack Query mutation
-			const loginResponse = await loginMutation.mutateAsync(credentials);
+			// Delegate to auth service
+			const user = await authService.login(credentials);
 
-			// Store the token
-			setStoredToken(loginResponse.token);
-
-			// FakeStoreAPI doesn't provide user info from token
-			// For demo purposes, fetch user with ID 1 (or map username to ID)
-			// In a real app, you'd decode the JWT token to get user ID
-			const userId = 1; // Default test user for FakeStoreAPI
-			const fakeStoreUser = await getUserProfile(userId);
-			const user = mapFakeStoreUserToUser(fakeStoreUser);
-
-			setStoredUser(user);
 			dispatch({ type: "AUTH_SUCCESS", payload: user });
 		} catch (error) {
 			const errorMessage =
@@ -145,27 +123,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		}
 	};
 
-	// Signup function (placeholder since FakeStore API doesn't support signup)
+	// Signup function using AuthService
 	const signup = async (credentials: SignupCredentials): Promise<void> => {
 		try {
 			dispatch({ type: "AUTH_START" });
 
-			// Since FakeStore API doesn't have signup, we'll simulate it
-			await new Promise(resolve => setTimeout(resolve, 1500));
+			// Delegate to auth service
+			const user = await authService.signup(credentials);
 
-			const user: User = {
-				id: Math.floor(Math.random() * 1000) + 100,
-				username: credentials.username,
-				email: credentials.email,
-				role: "user",
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			};
-
-			// For demo, we'll just create a mock token
-			const mockToken = `mock_token_${user.id}_${Date.now()}`;
-			setStoredToken(mockToken);
-			setStoredUser(user);
 			dispatch({ type: "AUTH_SUCCESS", payload: user });
 		} catch (error) {
 			const errorMessage =
@@ -177,8 +142,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 	// Logout function
 	const logout = (): void => {
-		clearStoredToken();
-		clearStoredUser();
+		authService.clearAuth();
 		dispatch({ type: "AUTH_LOGOUT" });
 	};
 

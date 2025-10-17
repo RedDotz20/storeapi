@@ -1,3 +1,12 @@
+/**
+ * Legacy API file - Refactored to use services
+ *
+ * This file now acts as a facade/adapter layer for backward compatibility.
+ * All business logic has been moved to respective services following SOLID principles.
+ *
+ * New code should import services directly instead of using this file.
+ */
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	LoginCredentials,
@@ -5,48 +14,27 @@ import type {
 	FakeStoreUser,
 	User,
 } from "../types/auth";
+import { authService } from "@/services/AuthService";
+import { HttpClient } from "@/services/HttpClient";
 import { config } from "@/components/config";
 
-// API base URL
-const API_BASE_URL = config.apiBaseUrl;
+// Create HTTP client for backward compatibility
+const httpClient = new HttpClient(config.apiBaseUrl);
 
-// API functions
+// API functions - now delegate to services
 export const loginUser = async (
 	credentials: LoginCredentials
 ): Promise<FakeStoreLoginResponse> => {
-	const response = await fetch(`${API_BASE_URL}/auth/login`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			username: credentials.username,
-			password: credentials.password,
-		}),
+	return httpClient.post<FakeStoreLoginResponse>("/auth/login", {
+		username: credentials.username,
+		password: credentials.password,
 	});
-
-	if (!response.ok) {
-		throw new Error("Invalid credentials");
-	}
-
-	return response.json();
 };
 
 export const getUserProfile = async (
 	userId: number
 ): Promise<FakeStoreUser> => {
-	const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	if (!response.ok) {
-		throw new Error("Failed to fetch user data");
-	}
-
-	return response.json();
+	return httpClient.get<FakeStoreUser>(`/users/${userId}`);
 };
 
 // Helper function to convert FakeStoreUser to our User type
@@ -55,7 +43,7 @@ export const mapFakeStoreUserToUser = (fakeStoreUser: FakeStoreUser): User => {
 		id: fakeStoreUser.id,
 		username: fakeStoreUser.username,
 		email: fakeStoreUser.email,
-		role: "user", // FakeStoreAPI doesn't have roles, default to user
+		role: "user",
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};
@@ -76,57 +64,31 @@ export const useUserQuery = (userId: number | null) => {
 		queryKey: ["user", userId],
 		queryFn: () => getUserProfile(userId!),
 		enabled: !!userId,
-		staleTime: 5 * 60 * 1000, // 5 minutes
+		staleTime: 5 * 60 * 1000,
 	});
 };
 
-// Storage utilities for token management
+// Storage utilities - delegate to AuthService
 export const getStoredToken = (): string | null => {
-	try {
-		return localStorage.getItem("auth_token");
-	} catch {
-		return null;
-	}
+	return authService.getStoredToken();
 };
 
 export const setStoredToken = (token: string): void => {
-	try {
-		localStorage.setItem("auth_token", token);
-	} catch {
-		// Ignore storage errors
-	}
+	authService.setStoredToken(token);
 };
 
 export const clearStoredToken = (): void => {
-	try {
-		localStorage.removeItem("auth_token");
-	} catch {
-		// Ignore storage errors
-	}
+	authService.clearStoredToken();
 };
 
-// Storage utilities for user data
 export const getStoredUser = (): User | null => {
-	try {
-		const storedUser = localStorage.getItem("auth_user");
-		return storedUser ? JSON.parse(storedUser) : null;
-	} catch {
-		return null;
-	}
+	return authService.getStoredUser();
 };
 
 export const setStoredUser = (user: User): void => {
-	try {
-		localStorage.setItem("auth_user", JSON.stringify(user));
-	} catch {
-		// Ignore storage errors
-	}
+	authService.setStoredUser(user);
 };
 
 export const clearStoredUser = (): void => {
-	try {
-		localStorage.removeItem("auth_user");
-	} catch {
-		// Ignore storage errors
-	}
+	authService.clearStoredUser();
 };

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import type { ProductType } from "@/types/products.types";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,35 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { ProductDetailSkeleton } from "@/components/ui/skeleton";
+import { NotFoundProduct } from "@/components/ui/not-found";
+import { ProductDetailErrorState } from "@/components/ui/error-state";
 import { ShoppingCart, Plus, Minus } from "lucide-react";
 import { useCartWithToast } from "@/hooks/useCartWithToast";
+
+function ProductErrorComponent({ error }: { error: Error }) {
+	const router = useRouter();
+
+	const handleRetry = () => {
+		router.invalidate();
+	};
+
+	// Check if it's a 404 error
+	if (error.message?.includes("404") || error.message?.includes("not found")) {
+		return (
+			<div className="min-h-screen w-full container mx-auto py-4">
+				<NotFoundProduct />
+			</div>
+		);
+	}
+
+	// For other errors, use custom error component with retry
+	return (
+		<div className="min-h-screen w-full container mx-auto py-4">
+			<ProductDetailErrorState onRetry={handleRetry} />
+		</div>
+	);
+}
 
 export const Route = createFileRoute("/dashboard/products/$productId")({
 	loader: async ({ params }) => {
@@ -20,6 +47,10 @@ export const Route = createFileRoute("/dashboard/products/$productId")({
 
 		return getProductById(productId);
 	},
+
+	pendingComponent: () => <ProductDetailSkeleton />,
+
+	errorComponent: ProductErrorComponent,
 
 	component: RouteComponent,
 });

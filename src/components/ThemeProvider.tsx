@@ -5,61 +5,45 @@ import {
 	useState,
 	type ReactNode,
 } from "react";
-
-type Theme = "light" | "dark" | "system";
+import { themeService } from "@/services/ThemeService";
+import type { Theme, ActualTheme } from "@/services/interfaces/IThemeService";
 
 interface ThemeContextType {
 	theme: Theme;
 	setTheme: (theme: Theme) => void;
-	actualTheme: "light" | "dark";
+	actualTheme: ActualTheme;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-	const [theme, setTheme] = useState<Theme>(() => {
-		// Get theme from localStorage or default to "system"
-		const savedTheme = localStorage.getItem("theme") as Theme | null;
-		return savedTheme || "system";
-	});
-
-	const [actualTheme, setActualTheme] = useState<"light" | "dark">("light");
+	const [theme, setThemeState] = useState<Theme>(() => themeService.getTheme());
+	const [actualTheme, setActualTheme] = useState<ActualTheme>(() =>
+		themeService.getActualTheme()
+	);
 
 	useEffect(() => {
-		// Save theme to localStorage
-		localStorage.setItem("theme", theme);
+		// Apply theme on mount
+		const resolvedTheme = themeService.applyTheme(theme);
+		setActualTheme(resolvedTheme);
 
-		const root = window.document.documentElement;
-
-		// Remove existing theme classes
-		root.classList.remove("light", "dark");
-
+		// Listen for system theme changes if theme is "system"
 		if (theme === "system") {
-			// Use system preference
-			const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-				.matches
-				? "dark"
-				: "light";
-			root.classList.add(systemTheme);
-			setActualTheme(systemTheme);
-
-			// Listen for system theme changes
-			const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-			const handleChange = (e: MediaQueryListEvent) => {
-				const newTheme = e.matches ? "dark" : "light";
-				root.classList.remove("light", "dark");
-				root.classList.add(newTheme);
+			const cleanup = themeService.onSystemThemeChange(newTheme => {
+				themeService.applyTheme("system");
 				setActualTheme(newTheme);
-			};
+			});
 
-			mediaQuery.addEventListener("change", handleChange);
-			return () => mediaQuery.removeEventListener("change", handleChange);
-		} else {
-			// Use explicit theme
-			root.classList.add(theme);
-			setActualTheme(theme);
+			return cleanup;
 		}
 	}, [theme]);
+
+	const setTheme = (newTheme: Theme) => {
+		setThemeState(newTheme);
+		themeService.setTheme(newTheme);
+		const resolvedTheme = themeService.applyTheme(newTheme);
+		setActualTheme(resolvedTheme);
+	};
 
 	return (
 		<ThemeContext.Provider value={{ theme, setTheme, actualTheme }}>
