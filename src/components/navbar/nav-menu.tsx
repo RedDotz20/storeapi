@@ -17,7 +17,7 @@ export const NavMenu = (props: ComponentProps<typeof NavigationMenu>) => (
 						className="text-2xl font-semibold flex items-center gap-2"
 						to="/"
 					>
-						<span>Nexus Marketplace</span>
+						<span>Nexus Market</span>
 					</Link>
 				</NavigationMenuLink>
 			</NavigationMenuItem>
