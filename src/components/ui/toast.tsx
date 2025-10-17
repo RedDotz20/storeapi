@@ -102,14 +102,14 @@ function ToastItem({
 	const getBackgroundColor = () => {
 		switch (toast.type) {
 			case "success":
-				return "bg-green-50 border-green-200";
+				return "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800";
 			case "error":
-				return "bg-red-50 border-red-200";
+				return "bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800";
 			case "warning":
-				return "bg-yellow-50 border-yellow-200";
+				return "bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800";
 			case "info":
 			default:
-				return "bg-blue-50 border-blue-200";
+				return "bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800";
 		}
 	};
 
@@ -124,11 +124,11 @@ function ToastItem({
 			<div className="flex items-start gap-3">
 				{getIcon()}
 				<div className="flex-1">
-					<p className="text-sm font-medium text-gray-900">{toast.message}</p>
+					<p className="text-sm font-medium">{toast.message}</p>
 				</div>
 				<button
 					onClick={onRemove}
-					className="text-gray-400 hover:text-gray-600 transition-colors"
+					className="text-muted-foreground hover:text-foreground transition-colors"
 				>
 					<X className="h-4 w-4" />
 				</button>

@@ -360,8 +360,10 @@ export default function Products() {
 						</div>
 					) : (
 						<div className="flex flex-col items-center justify-center py-12 text-center">
-							<p className="text-lg text-gray-600 mb-2">No products found</p>
-							<p className="text-sm text-gray-400">
+							<p className="text-lg text-muted-foreground mb-2">
+								No products found
+							</p>
+							<p className="text-sm text-muted-foreground/70">
 								Try adjusting your filters or search query
 							</p>
 						</div>

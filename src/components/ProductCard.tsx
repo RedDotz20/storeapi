@@ -44,7 +44,7 @@ export function ProductCard({
 					<img
 						src={image || "/placeholder.svg"}
 						alt={title}
-						className="w-full h-full object-contain p-4 sm:p-6 transition-transform group-hover:scale-105 bg-white"
+						className="w-full h-full object-contain p-4 sm:p-6 transition-transform group-hover:scale-105 bg-card"
 					/>
 				</div>
 				<Badge
@@ -73,7 +73,7 @@ export function ProductCard({
 									className={`h-3 w-3 sm:h-4 sm:w-4 ${
 										i < Math.floor(rating.rate)
 											? "fill-yellow-400 text-yellow-400"
-											: "fill-gray-200 text-gray-200"
+											: "fill-muted text-muted"
 									}`}
 								/>
 							))}

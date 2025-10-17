@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
-import { ShoppingCart, SunIcon } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useCart } from "../CartProvider";
 import { useAuth } from "../AuthProvider";
 import { Store } from "lucide-react";
@@ -16,6 +16,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ThemeToggle } from "../ThemeToggle";
 
 const Navbar = () => {
 	const { isAuthenticated, user, logout } = useAuth();
@@ -44,7 +45,7 @@ const Navbar = () => {
 						>
 							<ShoppingCart className="h-6 w-6" />
 							{cart.totalItems > 0 && (
-								<span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+								<span className="absolute -top-0.5 -right-0.5 bg-destructive text-destructive-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
 									{cart.totalItems}
 								</span>
 							)}
@@ -66,7 +67,9 @@ const Navbar = () => {
 								<DropdownMenuContent className="w-56" align="start">
 									<DropdownMenuLabel className="flex flex-col">
 										<span className="text-sm font-bold">{user?.username}</span>
-										<span className="text-xs text-gray-600">{user?.email}</span>
+										<span className="text-xs text-muted-foreground">
+											{user?.email}
+										</span>
 									</DropdownMenuLabel>
 									<DropdownMenuGroup>
 										<DropdownMenuItem>Profile</DropdownMenuItem>
@@ -93,9 +96,7 @@ const Navbar = () => {
 						</div>
 					)}
 
-					<Button size="icon" variant="outline">
-						<SunIcon />
-					</Button>
+					<ThemeToggle />
 
 					{/* Mobile Menu */}
 					<div className="md:hidden">

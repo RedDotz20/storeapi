@@ -67,18 +67,18 @@ export default function ProductFilters({
 
 	if (isLoading) {
 		return (
-			<div className="w-full lg:w-64 bg-white rounded-lg shadow-sm p-6">
+			<div className="w-full lg:w-64 bg-card rounded-lg shadow-sm p-6">
 				<div className="animate-pulse space-y-4">
-					<div className="h-4 bg-gray-200 rounded w-3/4"></div>
-					<div className="h-4 bg-gray-200 rounded w-1/2"></div>
-					<div className="h-4 bg-gray-200 rounded w-5/6"></div>
+					<div className="h-4 bg-muted rounded w-3/4"></div>
+					<div className="h-4 bg-muted rounded w-1/2"></div>
+					<div className="h-4 bg-muted rounded w-5/6"></div>
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="w-full lg:w-64 bg-white rounded-lg shadow-sm p-6 space-y-6 h-fit sticky top-4">
+		<div className="w-full lg:w-64 bg-card rounded-lg shadow-sm p-6 space-y-6 h-fit sticky top-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-semibold">Filters</h2>
 				{hasActiveFilters && (
@@ -86,7 +86,7 @@ export default function ProductFilters({
 						variant="ghost"
 						size="sm"
 						onClick={handleResetFilters}
-						className="text-sm text-gray-600 hover:text-gray-900"
+						className="text-sm"
 					>
 						<X className="w-4 h-4 mr-1" />
 						Clear
@@ -130,9 +130,9 @@ export default function ProductFilters({
 						onValueChange={handlePriceChange}
 						className="w-full"
 					/>
-					<div className="flex items-center justify-between text-sm text-gray-600">
+					<div className="flex items-center justify-between text-sm text-muted-foreground">
 						<span>${filters.priceRange[0].toFixed(2)}</span>
-						<span className="text-xs text-gray-400">to</span>
+						<span className="text-xs">to</span>
 						<span>${filters.priceRange[1].toFixed(2)}</span>
 					</div>
 				</div>
@@ -148,8 +148,8 @@ export default function ProductFilters({
 							onClick={() => handleRatingClick(rating)}
 							className={`flex items-center space-x-2 w-full p-2 rounded-md transition-colors ${
 								filters.minRating === rating
-									? "bg-blue-50 border border-blue-200"
-									: "hover:bg-gray-50"
+									? "bg-accent border border-primary"
+									: "hover:bg-accent/50"
 							}`}
 						>
 							<div className="flex items-center">
@@ -159,12 +159,12 @@ export default function ProductFilters({
 										className={`w-4 h-4 ${
 											index < rating
 												? "fill-yellow-400 text-yellow-400"
-												: "text-gray-300"
+												: "text-muted"
 										}`}
 									/>
 								))}
 							</div>
-							<span className="text-sm text-gray-600">& Up</span>
+							<span className="text-sm text-muted-foreground">& Up</span>
 						</button>
 					))}
 				</div>
@@ -172,12 +172,12 @@ export default function ProductFilters({
 
 			{/* Active Filters Summary */}
 			{hasActiveFilters && (
-				<div className="pt-4 border-t border-gray-200">
-					<div className="text-sm text-gray-600 space-y-2">
+				<div className="pt-4 border-t border-border">
+					<div className="text-sm text-muted-foreground space-y-2">
 						{filters.categories.length > 0 && (
 							<div>
 								<span className="font-medium">Categories: </span>
-								<span className="text-gray-500">
+								<span className="text-muted-foreground/70">
 									{filters.categories.length} selected
 								</span>
 							</div>
@@ -186,7 +186,7 @@ export default function ProductFilters({
 							filters.priceRange[1] < maxPrice) && (
 							<div>
 								<span className="font-medium">Price: </span>
-								<span className="text-gray-500">
+								<span className="text-muted-foreground/70">
 									${filters.priceRange[0]} - ${filters.priceRange[1]}
 								</span>
 							</div>
@@ -194,7 +194,7 @@ export default function ProductFilters({
 						{filters.minRating > 0 && (
 							<div>
 								<span className="font-medium">Rating: </span>
-								<span className="text-gray-500">
+								<span className="text-muted-foreground/70">
 									{filters.minRating}+ stars
 								</span>
 							</div>

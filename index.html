@@ -9,6 +9,23 @@
 		<link rel="apple-touch-icon" href="/logo192.png" />
 		<link rel="manifest" href="/manifest.json" />
 		<title>Nexus Marketplace</title>
+		<script>
+			// Prevent flash of unstyled content (FOUC) on page load
+			(function () {
+				const theme = localStorage.getItem("theme") || "system";
+				const root = document.documentElement;
+
+				if (theme === "system") {
+					const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+						.matches
+						? "dark"
+						: "light";
+					root.classList.add(systemTheme);
+				} else {
+					root.classList.add(theme);
+				}
+			})();
+		</script>
 	</head>
 	<body>
 		<div id="app"></div>

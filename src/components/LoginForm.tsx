@@ -71,7 +71,7 @@ export const LoginForm = () => {
 
 	return (
 		<div className="w-full max-w-md mx-auto">
-			<div className="bg-white shadow-md rounded-lg p-6">
+			<div className="bg-card shadow-md rounded-lg p-6">
 				<h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
 
 				{error && (
@@ -125,22 +125,22 @@ export const LoginForm = () => {
 				</form>
 
 				<div className="mt-6 text-center">
-					<p className="text-sm text-gray-600">
+					<p className="text-sm text-muted-foreground">
 						Don't have an account?{" "}
 						<Link
 							to="/auth/signup"
-							className="text-blue-600 hover:text-blue-500 font-medium"
+							className="text-primary hover:text-primary/80 font-medium"
 						>
 							Sign up
 						</Link>
 					</p>
 				</div>
 
-				<div className="mt-4 p-4 bg-gray-50 rounded-md">
-					<p className="text-sm text-gray-600 mb-2">
+				<div className="mt-4 p-4 bg-muted rounded-md">
+					<p className="text-sm text-muted-foreground mb-2">
 						Demo account for FakeStoreAPI:
 					</p>
-					<p className="text-xs text-gray-500">
+					<p className="text-xs text-muted-foreground/70">
 						Username: mor_2314
 						<br />
 						Password: 83r5^_

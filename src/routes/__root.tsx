@@ -4,6 +4,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import Navbar from "@/components/navbar";
 import { AuthProvider } from "../components/AuthProvider";
 import { CartProvider } from "../components/CartProvider";
+import { ThemeProvider } from "../components/ThemeProvider";
 import { ToastProvider } from "../components/ui/toast";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
@@ -16,26 +17,28 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	component: () => (
-		<AuthProvider>
-			<CartProvider>
-				<ToastProvider>
-					{/* <Header /> */}
-					<Navbar />
-					<Outlet />
-					<TanStackDevtools
-						config={{
-							position: "bottom-left",
-						}}
-						plugins={[
-							{
-								name: "Tanstack Router",
-								render: <TanStackRouterDevtoolsPanel />,
-							},
-							TanStackQueryDevtools,
-						]}
-					/>
-				</ToastProvider>
-			</CartProvider>
-		</AuthProvider>
+		<ThemeProvider>
+			<AuthProvider>
+				<CartProvider>
+					<ToastProvider>
+						{/* <Header /> */}
+						<Navbar />
+						<Outlet />
+						<TanStackDevtools
+							config={{
+								position: "bottom-left",
+							}}
+							plugins={[
+								{
+									name: "Tanstack Router",
+									render: <TanStackRouterDevtoolsPanel />,
+								},
+								TanStackQueryDevtools,
+							]}
+						/>
+					</ToastProvider>
+				</CartProvider>
+			</AuthProvider>
+		</ThemeProvider>
 	),
 });

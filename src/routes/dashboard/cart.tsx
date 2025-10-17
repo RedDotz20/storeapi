@@ -32,11 +32,9 @@ function CartPage() {
 		return (
 			<div className="min-h-screen w-full container mx-auto py-8">
 				<div className="text-center py-16">
-					<ShoppingBag className="mx-auto h-24 w-24 text-gray-400 mb-4" />
-					<h2 className="text-2xl font-bold text-gray-900 mb-2">
-						Your cart is empty
-					</h2>
-					<p className="text-gray-600 mb-6">
+					<ShoppingBag className="mx-auto h-24 w-24 text-muted-foreground mb-4" />
+					<h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
+					<p className="text-muted-foreground mb-6">
 						Add some products to get started!
 					</p>
 					<Button asChild>
@@ -65,7 +63,7 @@ function CartPage() {
 								<img
 									src={item.image}
 									alt={item.title}
-									className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-md bg-gray-50"
+									className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-md bg-card"
 								/>
 
 								<div className="flex-1 min-w-0">

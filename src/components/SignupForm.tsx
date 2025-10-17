@@ -71,7 +71,7 @@ export const SignupForm = () => {
 
 	return (
 		<div className="w-full max-w-md mx-auto">
-			<div className="bg-white shadow-md rounded-lg p-6">
+			<div className="bg-card shadow-md rounded-lg p-6">
 				<h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
 
 				{error && (
@@ -130,7 +130,7 @@ export const SignupForm = () => {
 								{getFieldError("password")}
 							</p>
 						)}
-						<p className="text-xs text-gray-500 mt-1">
+						<p className="text-xs text-muted-foreground/70 mt-1">
 							Must be at least 8 characters with uppercase, lowercase, and
 							number
 						</p>
@@ -167,11 +167,11 @@ export const SignupForm = () => {
 				</form>
 
 				<div className="mt-6 text-center">
-					<p className="text-sm text-gray-600">
+					<p className="text-sm text-muted-foreground">
 						Already have an account?{" "}
 						<Link
 							to="/auth/login"
-							className="text-blue-600 hover:text-blue-500 font-medium"
+							className="text-primary hover:text-primary/80 font-medium"
 						>
 							Sign in
 						</Link>
