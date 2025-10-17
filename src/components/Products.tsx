@@ -17,6 +17,7 @@ import {
 import { Search } from "lucide-react";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
 type SortOption =
 	| "name-asc"
@@ -27,18 +28,25 @@ type SortOption =
 	| "rating-desc";
 
 export default function Products() {
+	const navigate = useNavigate({ from: "/dashboard" });
+	const searchParams = useSearch({ from: "/dashboard/" });
+
 	const { isLoading, error, data } = useQuery({
 		queryKey: ["products"],
 		queryFn: () => getProducts(),
 	});
 
-	const [searchQuery, setSearchQuery] = useState("");
 	const [showSuggestions, setShowSuggestions] = useState(false);
 	const [selectedIndex, setSelectedIndex] = useState(-1);
-	const [sortBy, setSortBy] = useState<SortOption>("rating-desc");
-	const debounceQuery = useDebounce(searchQuery, 300);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const suggestionsRef = useRef<HTMLDivElement>(null);
+
+	// Initialize state from URL search params
+	const [searchQuery, setSearchQuery] = useState(searchParams.search || "");
+	const [sortBy, setSortBy] = useState<SortOption>(
+		searchParams.sortBy || "rating-desc"
+	);
+	const debounceQuery = useDebounce(searchQuery, 300);
 
 	// Calculate max price from products
 	const maxPrice = useMemo(() => {
@@ -46,16 +54,35 @@ export default function Products() {
 		return Math.ceil(Math.max(...data.map(p => p.price)) / 10) * 10;
 	}, [data]);
 
-	// Filter state
-	const [filters, setFilters] = useState<FilterState>(() => ({
-		categories: [],
-		priceRange: [0, 1000],
-		minRating: 0,
-	}));
+	// Initialize filter state from URL search params
+	const [filters, setFilters] = useState<FilterState>(() => {
+		// Handle category from landing page
+		const initialCategories = searchParams.category
+			? [searchParams.category]
+			: searchParams.categories || [];
 
-	// Update price range max when maxPrice is calculated
+		return {
+			categories: initialCategories,
+			priceRange: [
+				searchParams.minPrice || 0,
+				searchParams.maxPrice || 1000,
+			] as [number, number],
+			minRating: searchParams.minRating || 0,
+		};
+	});
+
+	// Update price range max when maxPrice is calculated (only if no URL params exist)
 	useEffect(() => {
-		if (maxPrice > 0 && filters.priceRange[1] === 1000) {
+		// Only auto-update if user hasn't set custom price range in URL
+		const hasCustomPriceInUrl =
+			searchParams.minPrice !== undefined ||
+			searchParams.maxPrice !== undefined;
+
+		if (
+			maxPrice > 0 &&
+			filters.priceRange[1] === 1000 &&
+			!hasCustomPriceInUrl
+		) {
 			setFilters(prev => ({
 				...prev,
 				priceRange: [0, maxPrice],
@@ -63,6 +90,25 @@ export default function Products() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [maxPrice]);
+
+	// Sync state to URL when filters change
+	useEffect(() => {
+		navigate({
+			search: prev => ({
+				...prev,
+				search: searchQuery || undefined,
+				sortBy: sortBy,
+				categories:
+					filters.categories.length > 0 ? filters.categories : undefined,
+				category: undefined, // Clear single category when using filters
+				minPrice: filters.priceRange[0] > 0 ? filters.priceRange[0] : undefined,
+				maxPrice:
+					filters.priceRange[1] < maxPrice ? filters.priceRange[1] : undefined,
+				minRating: filters.minRating > 0 ? filters.minRating : undefined,
+			}),
+			replace: true, // Replace history to avoid cluttering browser history
+		});
+	}, [searchQuery, sortBy, filters, maxPrice, navigate]);
 
 	// Get autocomplete suggestions based on search query
 	const suggestions =
